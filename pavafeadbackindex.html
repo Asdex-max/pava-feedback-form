@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>PAVA — Анонимная форма</title>
+  <style>
+    body {
+      background: radial-gradient(circle at center, #1f0f2f, #0a0813);
+      color: white;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .form-container {
+      background: rgba(30, 30, 60, 0.9);
+      padding: 30px;
+      border-radius: 15px;
+      max-width: 500px;
+      width: 100%;
+    }
+    h1 {
+      text-align: center;
+      color: #ff99ff;
+    }
+    textarea, input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: none;
+      font-size: 16px;
+    }
+    button {
+      background: #ff66cc;
+      color: white;
+      border: none;
+      padding: 12px;
+      width: 100%;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #e055b5;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h1>💬 PAVA — Анонимная форма</h1>
+    <form id="pavaForm">
+      <textarea name="message" placeholder="Ваше сообщение или идея" required></textarea>
+      <input type="text" name="nickname" placeholder="Ваш Telegram-ник (необязательно)">
+      <button type="submit">Отправить</button>
+    </form>
+    <p id="status" style="text-align:center; color:#9f9;"> </p>
+  </div>
+
+  <script>
+    const TOKEN = "7744031571:AAFvrWAPYn5e2i9_nwkQKw_rRw8FxAhU-hw";
+    const CHAT_ID = "7744031571";
+
+    document.getElementById("pavaForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const message = this.message.value;
+      const nickname = this.nickname.value || "не указан";
+
+      const text = `📩 Новое сообщение с формы PAVA:\n\n💬 ${message}\n\n👤 Никнейм: ${nickname}`;
+
+      fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          chat_id: CHAT_ID,
+          text: text
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("status").innerText = "✅ Сообщение отправлено!";
+        document.getElementById("pavaForm").reset();
+      })
+      .catch(err => {
+        document.getElementById("status").innerText = "❌ Ошибка отправки.";
+        console.error(err);
+      });
+    });
+  </script>
+</body>
+</html>
